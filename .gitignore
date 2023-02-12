@@ -16,3 +16,9 @@ kernel/kernel
 user/usys.S
 .gdbinit
 .vscode/
+kernel/.vs/VSWorkspaceState.json
+kernel/.vs/slnx.sqlite
+kernel/.vs/kernel/v17/Browse.VC.db
+kernel/.vs/kernel/v17/.suo
+kernel/.vs/kernel/FileContentIndex/read.lock
+kernel/.vs/kernel/FileContentIndex/2864bf0b-890b-4d7c-ae6f-99575db52ae9.vsidx

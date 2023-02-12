@@ -138,6 +138,10 @@ consoleintr(int c)
   acquire(&cons.lock);
 
   switch(c){
+  case C('C'):  // Print process list.
+    //TODO: Callback to user mode signal handler code
+    printf("\nyou pressed CTRL+C!\n");
+    break;
   case C('P'):  // Print process list.
     procdump();
     break;
