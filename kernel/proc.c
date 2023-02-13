@@ -693,3 +693,16 @@ procdump(void)
     printf("\n");
   }
 }
+
+int fgproc(void)
+{
+  struct proc *p;
+  for(p = proc; p < &proc[NPROC]; p++){
+    if(p->state == RUNNING){
+      kill(p->pid);
+      printf("Ctrl + C\n");
+      break;
+    }
+  }
+  return 23;
+}

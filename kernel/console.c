@@ -134,13 +134,15 @@ consoleread(int user_dst, uint64 dst, int n)
 //
 void
 consoleintr(int c)
-{
+{ 
+  int kill_proc = 0;
   acquire(&cons.lock);
 
   switch(c){
   case C('C'):  // Print process list.
     //TODO: Callback to user mode signal handler code
-    printf("\nyou pressed CTRL+C!\n");
+    // printf("\nyou pressed CTRL+C!\n");
+    kill_proc = 1;
     break;
   case C('P'):  // Print process list.
     procdump();
@@ -180,6 +182,10 @@ consoleintr(int c)
   }
   
   release(&cons.lock);
+
+  if(kill_proc){
+    fgproc();
+  }
 }
 
 void
