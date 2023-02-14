@@ -3,7 +3,7 @@
 void signal(int sig, void (*func)(int));
 
 //stores different signal handlers given user input from signal.c 
-void (*handlers)(int); //arbitrary number
+void (*handlers)(int);
 
 //creating struct for context stack
 struct context_stack{
