@@ -183,9 +183,9 @@ consoleintr(int c)
   
   release(&cons.lock);
 
-  if(kill_proc){
-    fgproc();
-  }
+  // if(kill_proc){
+  //   sendSignal();
+  // }
 }
 
 void

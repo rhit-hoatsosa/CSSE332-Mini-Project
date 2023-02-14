@@ -1,5 +1,6 @@
 #include "kernel/types.h"
 #include "kernel/stat.h"
+#include "user/defs.h"
 #include "user/signal.h"
 #include "user/user.h"
 
@@ -13,12 +14,23 @@ void handler(int signum) {
   exit(0);
 }
 
-int main(void) { 
-  signal(SIGINT, handler);
 
-  for (int i = 0; i < 100; i++) {
+int main(void) { 
+  // signal(SIGINT, handler);
+
+  // for (int i = 0; i < 10000; i++) {
+  //     print("hello\n");
+  //     sleep(1);
+  // }
+
+  int p = fork();
+  if(p == 0){
+    for (int i = 0; i < 10000; i++) {
       print("hello\n");
-      sleep(1);
+    }    
+  }else{
+    // send a signal to child (from system call)
+    sendSiganl(p);
   }
   return 0;
 }

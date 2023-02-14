@@ -288,6 +288,7 @@ fork(void)
     return -1;
   }
 
+  p->signalReceived = 0;
   // Copy user memory from parent to child.
   if(uvmcopy(p->pagetable, np->pagetable, p->sz) < 0){
     freeproc(np);
@@ -694,15 +695,16 @@ procdump(void)
   }
 }
 
-int fgproc(void)
+int sendSignal(void* args)
 {
-  struct proc *p;
-  for(p = proc; p < &proc[NPROC]; p++){
-    if(p->state == RUNNING){
-      kill(p->pid);
-      printf("Ctrl + C\n");
-      break;
-    }
-  }
+  // struct proc *p;
+  // for(p = proc; p < &proc[NPROC]; p++){
+  //   if(p->state == RUNNING){
+  //     kill(p->pid);
+  //     printf("Ctrl + C\n");
+  //     break;
+  //   }
+  // }
+  printf("Signal %d\n", (int*)args);
   return 23;
 }

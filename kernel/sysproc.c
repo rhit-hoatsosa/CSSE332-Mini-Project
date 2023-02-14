@@ -92,7 +92,9 @@ sys_uptime(void)
 
 
 uint64
-sys_fgproc(void)
+sys_sendSignal(void)
 {
-  return fgproc();
+  uint64 addr;
+  argaddr(0, &addr);
+  return sendSignal((void*)addr);
 }
