@@ -22,6 +22,7 @@ int main(void) {
     }    
   }else{
     // send a signal to child (from system call)
+
     sendSignal(p);
     int status;
     wait(&status);

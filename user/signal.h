@@ -1,6 +1,6 @@
 #define SIGINT  4
 
-// void signal(int sig, void (*func)(int));
+void signal(int sig, void (*func)(int));
 
 //stores different signal handlers given user input from signal.c 
 // void (*handlers)(int);

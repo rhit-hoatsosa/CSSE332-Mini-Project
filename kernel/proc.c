@@ -723,7 +723,6 @@ void signalHandler(int signum){
           /*Default SigInt Handler*/
           if(p->customerSigHandler == 0){
             kill(p->pid);
-            printf("\nCtrl + C\n");
           }else{
             /*Customer Defined Signal Handler*/
             p->customerSigHandler(signum);
@@ -732,6 +731,7 @@ void signalHandler(int signum){
         default:
           break;
       }
+      p->signalReceived = 0;
     }
   }
 }
