@@ -94,7 +94,7 @@ sys_uptime(void)
 uint64
 sys_sendSignal(void)
 {
-  uint64 addr;
-  argaddr(0, &addr);
-  return sendSignal(0, (void*)addr);
+  int pid;
+  argint(0, &pid);
+  return sendSignal(pid);
 }

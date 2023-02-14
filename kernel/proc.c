@@ -5,6 +5,7 @@
 #include "spinlock.h"
 #include "proc.h"
 #include "defs.h"
+#include "user/signal.h"
 
 struct cpu cpus[NCPU];
 
@@ -289,6 +290,8 @@ fork(void)
   }
 
   p->signalReceived = 0;
+  p->customerSigHandler = 0;
+
   // Copy user memory from parent to child.
   if(uvmcopy(p->pagetable, np->pagetable, p->sz) < 0){
     freeproc(np);
@@ -695,16 +698,40 @@ procdump(void)
   }
 }
 
-int sendSignal(int arg1, void* arg2)
+int sendSignal(int pid)
 {
-  // struct proc *p;
-  // for(p = proc; p < &proc[NPROC]; p++){
-  //   if(p->state == RUNNING){
-  //     kill(p->pid);
-  //     printf("Ctrl + C\n");
-  //     break;
-  //   }
-  // }
-  printf("Signal %d\n", arg1);
+  struct proc *p;
+  for(p = proc; p < &proc[NPROC]; p++){
+    if(p->pid == pid){
+      acquire(&p->lock);
+      p->signalReceived = 1;
+      release(&p->lock);
+      break;
+    }
+  }
+
   return 23;
+}
+
+void signalHandler(int signum){
+  struct proc *p;
+  for(p = proc; p < &proc[NPROC]; p++){
+    if(p->signalReceived){
+      switch (signum)
+      {
+        case SIGINT:
+          /*Default SigInt Handler*/
+          if(p->customerSigHandler == 0){
+            kill(p->pid);
+            printf("\nCtrl + C\n");
+          }else{
+            /*Customer Defined Signal Handler*/
+            p->customerSigHandler(signum);
+          }
+          break;
+        default:
+          break;
+      }
+    }
+  }
 }
