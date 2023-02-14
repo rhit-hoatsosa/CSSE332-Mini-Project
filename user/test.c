@@ -1,8 +1,9 @@
 #include "kernel/types.h"
 #include "kernel/stat.h"
-#include "kernel/defs.h"
-#include "user/signal.h"
+// #include "kernel/defs.h"
 #include "user/user.h"
+// #include "user/signal.h"
+
 
 
 void print(const char* s)
@@ -26,12 +27,14 @@ int main(void) {
 
   int p = fork();
   if(p == 0){
-    for (int i = 0; i < 10000; i++) {
+    for (int i = 0; i < 10; i++) {
       print("hello\n");
     }    
   }else{
     // send a signal to child (from system call)
     sendSignal(p, 0);
+    int status;
+    wait(&status);
   }
   return 0;
 }
