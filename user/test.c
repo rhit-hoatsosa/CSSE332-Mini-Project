@@ -1,18 +1,19 @@
 #include "kernel/types.h"
 #include "kernel/stat.h"
-#include "user/defs.h"
+#include "kernel/defs.h"
 #include "user/signal.h"
 #include "user/user.h"
+
 
 void print(const char* s)
 {
   write(1, s, strlen(s));
 }
 
-void handler(int signum) {
-  print("in signal handler\n");
-  exit(0);
-}
+// void handler(int signum) {
+//   print("in signal handler\n");
+//   exit(0);
+// }
 
 
 int main(void) { 
@@ -30,7 +31,7 @@ int main(void) {
     }    
   }else{
     // send a signal to child (from system call)
-    sendSiganl(p);
+    sendSignal(p, 0);
   }
   return 0;
 }

@@ -96,5 +96,5 @@ sys_sendSignal(void)
 {
   uint64 addr;
   argaddr(0, &addr);
-  return sendSignal((void*)addr);
+  return sendSignal(0, (void*)addr);
 }

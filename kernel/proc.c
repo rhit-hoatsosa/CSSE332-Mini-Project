@@ -695,7 +695,7 @@ procdump(void)
   }
 }
 
-int sendSignal(void* args)
+int sendSignal(int arg1, void* arg2)
 {
   // struct proc *p;
   // for(p = proc; p < &proc[NPROC]; p++){
@@ -705,6 +705,6 @@ int sendSignal(void* args)
   //     break;
   //   }
   // }
-  printf("Signal %d\n", (int*)args);
+  printf("Signal %d\n", arg1);
   return 23;
 }
