@@ -110,5 +110,6 @@ struct proc {
   char name[16];               // Process name (debugging)
 
   int signalReceived;
+  int signum;
   void (*customerSigHandler)(int);
 };

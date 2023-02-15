@@ -90,11 +90,25 @@ sys_uptime(void)
   return xticks;
 }
 
-
 uint64
 sys_sendSignal(void)
 {
   int pid;
   argint(0, &pid);
   return sendSignal(pid);
+}
+
+typedef void(SIGNALFUNC)(int);
+typedef SIGNALFUNC* PSIGNALFUNC;
+
+uint64
+sys_signal(void)
+{
+  int s;
+  uint64 p;
+  argint(0, &s);
+  argaddr(1, &p);
+  printf("sys_signal %d %p\n", s, p);
+  signal(s, p);
+  return 0;
 }

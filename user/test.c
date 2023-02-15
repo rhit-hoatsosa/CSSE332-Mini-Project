@@ -3,8 +3,6 @@
 #include "user/user.h"
 // #include "user/signal.h"
 
-
-
 void handler(int signum) {
   printf("in signal handler\n");
   // exit(0);
@@ -12,13 +10,14 @@ void handler(int signum) {
 }
 
 
-int main(void) { 
-  // signal(SIGINT, handler);
+int main(void) {
+  signal(SIGINT, handler);
 
   int p = fork();
   if(p == 0){
-    for (int i = 0; i < 10000; i++) {
+    for (int i = 0; i < 100; i++) {
       printf("hello\n");
+      sleep(1);
     }    
   }else{
     // send a signal to child (from system call)

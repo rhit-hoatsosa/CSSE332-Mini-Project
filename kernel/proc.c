@@ -5,7 +5,8 @@
 #include "spinlock.h"
 #include "proc.h"
 #include "defs.h"
-#include "user/signal.h"
+
+#define SIGINT  4
 
 struct cpu cpus[NCPU];
 
@@ -125,6 +126,8 @@ allocproc(void)
 found:
   p->pid = allocpid();
   p->state = USED;
+  p->signalReceived = 0;
+  p->customerSigHandler = 0;
 
   // Allocate a trapframe page.
   if((p->trapframe = (struct trapframe *)kalloc()) == 0){
@@ -289,9 +292,6 @@ fork(void)
     return -1;
   }
 
-  p->signalReceived = 0;
-  p->customerSigHandler = 0;
-
   // Copy user memory from parent to child.
   if(uvmcopy(p->pagetable, np->pagetable, p->sz) < 0){
     freeproc(np);
@@ -299,6 +299,11 @@ fork(void)
     return -1;
   }
   np->sz = p->sz;
+  
+  printf("fork from %d to %d %p\n", p->pid, np->pid, p->customerSigHandler );
+  // copy the signal handler to the child process
+  np->customerSigHandler = p->customerSigHandler;
+  np->signum = p->signum;
 
   // copy saved user registers.
   *(np->trapframe) = *(p->trapframe);
@@ -722,9 +727,11 @@ void signalHandler(int signum){
         case SIGINT:
           /*Default SigInt Handler*/
           if(p->customerSigHandler == 0){
+            printf("killing process %d\n", p->pid);
             kill(p->pid);
           }else{
             /*Customer Defined Signal Handler*/
+            printf("sending signal to process %d\n", p->pid);
             p->customerSigHandler(signum);
           }
           break;
@@ -735,3 +742,16 @@ void signalHandler(int signum){
     }
   }
 }
+
+typedef void(SIGHANDLER)(int);
+typedef SIGHANDLER* PSIGHANDLER;
+
+void signal(int s, uint64 func) {
+  struct proc* p = myproc();
+
+  printf("signal called process %d %p\n", p->pid, func);
+  
+  p->signum = s;
+  p->customerSigHandler = (PSIGHANDLER)func;
+}
+

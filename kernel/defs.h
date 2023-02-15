@@ -110,6 +110,8 @@ void            procdump(void);
 
 int             sendSignal(int);
 void            signalHandler(int);
+void            signal(int, uint64);
+
 
 // swtch.S
 void            swtch(struct context*, struct context*);

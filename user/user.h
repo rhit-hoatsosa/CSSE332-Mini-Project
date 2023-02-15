@@ -1,5 +1,9 @@
 struct stat;
 
+typedef void(SIGNALFUNC)(int);
+typedef SIGNALFUNC* PSIGNALFUNC;
+#define SIGINT  4
+
 // system calls
 int fork(void);
 int exit(int) __attribute__((noreturn));
@@ -23,6 +27,7 @@ char* sbrk(int);
 int sleep(int);
 int uptime(void);
 int sendSignal(int);
+void signal(int, void*);
 
 // ulib.c
 int stat(const char*, struct stat*);
