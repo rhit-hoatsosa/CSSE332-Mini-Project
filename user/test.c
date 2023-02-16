@@ -15,13 +15,13 @@ void signal_handler(int signum) {
 }
 
 int main(void) {
-  uint64 ptr = (uint64)signal_handler;
-  void (*fnptr)(int) = (void (*)(int))ptr;
+  //uint64 ptr = (uint64)signal_handler;
+  //void (*fnptr)(int) = (void (*)(int))ptr;
   //(*fnptr)(SIGINT);
-  test(ptr);
+  //test(ptr);
   //uint64 handler = (uint64)signal_handler;
   //printf("calling signal %p\n", handler);
-  signal(SIGINT, (void*)fnptr);
+  signal(SIGINT, (void*)0xDEADBEEF);
   //sendSignal(getpid());
 
   int p = fork();
