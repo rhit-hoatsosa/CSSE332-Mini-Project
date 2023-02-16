@@ -723,6 +723,7 @@ int sendSignal(int pid)
 
 //force custom handler to call special exit function to restore all trapframe
 void restore(void) {
+  printf("restore\n");
   struct proc* p = myproc();
   // TODO: we need to undo this....
   //create a new trapframe backup
