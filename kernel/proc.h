@@ -111,5 +111,5 @@ struct proc {
 
   int signalReceived;
   int signum;
-  void (*customerSigHandler)(int);
+  uint64 customerSigHandler;
 };

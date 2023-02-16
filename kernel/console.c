@@ -185,7 +185,8 @@ consoleintr(int c)
   release(&cons.lock);
 
   if(kill_proc){
-    signalHandler(SIGINT);
+    printf("signalHandler\n");
+    //signalHandler(SIGINT);
   }
 }
 

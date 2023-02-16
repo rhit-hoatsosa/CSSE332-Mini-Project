@@ -1,17 +1,10 @@
 #include "kernel/types.h"
 #include "kernel/stat.h"
 #include "user/user.h"
-// #include "user/signal.h"
-
-void test(uint64 pfn) {
-  uint32 lo = pfn & 0xFFFFFFFF;
-  uint32 hi = (pfn >> 32) & 0xFFFFFFFF;
-  printf("test %x%x\n", hi, lo);
-}
 
 void signal_handler(int signum) {
   printf("in signal handler %d\n", signum);
-  //exit(0);
+  exit(0);
 }
 
 int main(void) {
@@ -21,7 +14,7 @@ int main(void) {
   //test(ptr);
   //uint64 handler = (uint64)signal_handler;
   //printf("calling signal %p\n", handler);
-  signal(SIGINT, (void*)0xDEADBEEF);
+  signal(SIGINT, signal_handler);
   //sendSignal(getpid());
 
   int p = fork();
@@ -32,8 +25,8 @@ int main(void) {
     }    
   } else {
     // send a signal to child (from system call)
-
-    //sendSignal(p);
+    sleep(5);
+    sendSignal(p);
     int status;
     wait(&status);
 

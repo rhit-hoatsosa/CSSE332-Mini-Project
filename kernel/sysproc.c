@@ -104,12 +104,10 @@ typedef SIGNALFUNC* PSIGNALFUNC;
 uint64
 sys_signal(void)
 {
-  struct proc *p = myproc();
   int s;
   uint64 addr;
   argint(0, &s);
   argaddr(1, &addr);
-  printf("sys_signal %p %p %p %p %p\n", p->trapframe->a0, p->trapframe->a1, p->trapframe->a2, p->trapframe->a3, p->trapframe->a4);
   signal(s, addr);
   return 0;
 }

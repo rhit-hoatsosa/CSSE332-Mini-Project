@@ -109,7 +109,7 @@ int             either_copyin(void *dst, int user_src, uint64 src, uint64 len);
 void            procdump(void);
 
 int             sendSignal(int);
-void            signalHandler(int);
+void            signalHandler(struct proc *p);
 void            signal(int, uint64);
 
 

@@ -127,7 +127,7 @@ found:
   p->pid = allocpid();
   p->state = USED;
   p->signalReceived = 0;
-  p->customerSigHandler = 0;
+  p->customerSigHandler = (uint64)(-1);
 
   // Allocate a trapframe page.
   if((p->trapframe = (struct trapframe *)kalloc()) == 0){
@@ -479,6 +479,8 @@ scheduler(void)
         c->proc = p;
         found = 1;
         swtch(&c->context, &p->context);
+        //printf("going into sig handler...\n");
+        //signalHandler(p);
 
         // Process is done running for now.
         // It should have changed its p->state before coming back.
@@ -718,35 +720,22 @@ int sendSignal(int pid)
   return 23;
 }
 
-void signalHandler(int signum){
-  struct proc *p;
-  for(p = proc; p < &proc[NPROC]; p++){
-    if(p->signalReceived || p->signum){
-      switch (signum)
-      {
-        case SIGINT:
-          /*Default SigInt Handler*/
-          if(p->customerSigHandler == 0){
-            printf("killing process %d\n", p->pid);
-            kill(p->pid);
-          }else{
-            /*Customer Defined Signal Handler*/
-            printf("sending signal to process %d\n", p->pid);
-            // Must switch to user mode context
-            p->customerSigHandler(signum);
-            // Must switch back to kernel mode context
-          }
-          break;
-        default:
-          break;
-      }
-      p->signalReceived = 0;
+void signalHandler(struct proc *p){
+  if(p->signalReceived){
+    /*Default SigInt Handler*/
+    if(p->customerSigHandler == (uint64)(-1)) {
+      printf("killing process %d\n", p->pid);
+      p->killed = 1;
+    }else {
+      /*Customer Defined Signal Handler*/
+      //switching from kernel to user mode to goto the signal_handler
+      //backup all trapframe
+      p->trapframe->ra = p->customerSigHandler;
+      //force custom handler to call special exit function to restore all trapframe
     }
+    p->signalReceived = 0;
   }
 }
-
-typedef void(SIGHANDLER)(int);
-typedef SIGHANDLER* PSIGHANDLER;
 
 void signal(int s, uint64 func) {
   struct proc* p = myproc();
@@ -754,6 +743,6 @@ void signal(int s, uint64 func) {
   printf("kernel: signal called process %d %p\n", p->pid, func);
   
   p->signum = s;
-  p->customerSigHandler = (PSIGHANDLER)func;
+  p->customerSigHandler = func;
 }
 
