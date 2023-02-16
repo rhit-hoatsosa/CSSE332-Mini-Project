@@ -104,6 +104,7 @@ extern uint64 sys_close(void);
 
 extern uint64 sys_sendSignal(void);
 extern uint64 sys_signal(void);
+extern uint64 sys_restore(void);
 
 // An array mapping syscall numbers from syscall.h
 // to the function that handles the system call.
@@ -131,7 +132,8 @@ static uint64 (*syscalls[])(void) = {
 [SYS_close]   sys_close,
 
 [SYS_sendSignal]  sys_sendSignal,
-[SYS_signal]  sys_signal,
+[SYS_signal]      sys_signal,
+[SYS_restore]     sys_restore,
 };
 
 void

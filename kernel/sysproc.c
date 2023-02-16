@@ -98,11 +98,19 @@ sys_sendSignal(void)
   return sendSignal(pid);
 }
 
-typedef void(SIGNALFUNC)(int);
-typedef SIGNALFUNC* PSIGNALFUNC;
-
 uint64
 sys_signal(void)
+{
+  int s;
+  uint64 addr;
+  argint(0, &s);
+  argaddr(1, &addr);
+  signal(s, addr);
+  return 0;
+}
+
+uint64
+sys_restore(void)
 {
   int s;
   uint64 addr;

@@ -9,6 +9,7 @@
 #define SIGINT  4
 
 struct cpu cpus[NCPU];
+void usertrap(void);
 
 struct proc proc[NPROC];
 
@@ -720,6 +721,16 @@ int sendSignal(int pid)
   return 23;
 }
 
+//force custom handler to call special exit function to restore all trapframe
+void restore(void) {
+  struct proc* p = myproc();
+  // TODO: we need to undo this....
+  //create a new trapframe backup
+  p->backup = (struct trapframe*)kalloc();
+  // copy the current trapframe in the backup one
+  *(p->backup) = *(p->trapframe);
+}
+
 void signalHandler(struct proc *p){
   if(p->signalReceived){
     /*Default SigInt Handler*/
@@ -728,10 +739,12 @@ void signalHandler(struct proc *p){
       p->killed = 1;
     }else {
       /*Customer Defined Signal Handler*/
+      //create a new trapframe backup
+      p->backup = (struct trapframe*)kalloc();
+      // copy the current trapframe in the backup one
+      *(p->backup) = *(p->trapframe);
       //switching from kernel to user mode to goto the signal_handler
-      //backup all trapframe
       p->trapframe->ra = p->customerSigHandler;
-      //force custom handler to call special exit function to restore all trapframe
     }
     p->signalReceived = 0;
   }
@@ -740,7 +753,7 @@ void signalHandler(struct proc *p){
 void signal(int s, uint64 func) {
   struct proc* p = myproc();
 
-  printf("kernel: signal called process %d %p\n", p->pid, func);
+  //printf("kernel: signal called process %d %p\n", p->pid, func);
   
   p->signum = s;
   p->customerSigHandler = func;

@@ -111,5 +111,6 @@ struct proc {
 
   int signalReceived;
   int signum;
+  struct trapframe* backup;
   uint64 customerSigHandler;
 };

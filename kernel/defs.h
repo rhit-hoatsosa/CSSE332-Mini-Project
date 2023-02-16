@@ -111,6 +111,7 @@ void            procdump(void);
 int             sendSignal(int);
 void            signalHandler(struct proc *p);
 void            signal(int, uint64);
+void            restore(void);
 
 
 // swtch.S

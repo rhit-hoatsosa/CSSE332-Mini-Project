@@ -6,10 +6,10 @@
         # push all registers, call kerneltrap().
         # when kerneltrap() returns, restore registers, return.
         #
-.globl kerneltrap
-.globl kernelvec
+.globl signal_regs
+.globl signalrestore
 .align 4
-kernelvec:
+signalrestore:
         # make room to save registers.
         addi sp, sp, -256
 
@@ -47,7 +47,7 @@ kernelvec:
         sd t6, 240(sp)
 
         # call the C trap handler in trap.c
-        call p->trapframe->ra = p->customerSigHandler;
+        call signal_regs;
 
         # restore registers.
         ld ra, 0(sp)
