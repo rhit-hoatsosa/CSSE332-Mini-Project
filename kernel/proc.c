@@ -300,7 +300,7 @@ fork(void)
   }
   np->sz = p->sz;
   
-  printf("fork from %d to %d %p\n", p->pid, np->pid, p->customerSigHandler );
+  //printf("fork from %d to %d %p\n", p->pid, np->pid, p->customerSigHandler );
   // copy the signal handler to the child process
   np->customerSigHandler = p->customerSigHandler;
   np->signum = p->signum;
@@ -721,7 +721,7 @@ int sendSignal(int pid)
 void signalHandler(int signum){
   struct proc *p;
   for(p = proc; p < &proc[NPROC]; p++){
-    if(p->signalReceived){
+    if(p->signalReceived || p->signum){
       switch (signum)
       {
         case SIGINT:
@@ -732,7 +732,9 @@ void signalHandler(int signum){
           }else{
             /*Customer Defined Signal Handler*/
             printf("sending signal to process %d\n", p->pid);
+            // Must switch to user mode context
             p->customerSigHandler(signum);
+            // Must switch back to kernel mode context
           }
           break;
         default:
@@ -749,7 +751,7 @@ typedef SIGHANDLER* PSIGHANDLER;
 void signal(int s, uint64 func) {
   struct proc* p = myproc();
 
-  printf("signal called process %d %p\n", p->pid, func);
+  printf("kernel: signal called process %d %p\n", p->pid, func);
   
   p->signum = s;
   p->customerSigHandler = (PSIGHANDLER)func;

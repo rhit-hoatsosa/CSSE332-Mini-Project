@@ -1,7 +1,5 @@
 struct stat;
 
-typedef void(SIGNALFUNC)(int);
-typedef SIGNALFUNC* PSIGNALFUNC;
 #define SIGINT  4
 
 // system calls
