@@ -3,15 +3,15 @@
 #include "user/user.h"
 // #include "user/signal.h"
 
-void signal_handler(int signum) {
-  printf("in signal handler %d\n", signum);
-  //exit(0);
-}
-
 void test(uint64 pfn) {
   uint32 lo = pfn & 0xFFFFFFFF;
   uint32 hi = (pfn >> 32) & 0xFFFFFFFF;
   printf("test %x%x\n", hi, lo);
+}
+
+void signal_handler(int signum) {
+  printf("in signal handler %d\n", signum);
+  //exit(0);
 }
 
 int main(void) {
