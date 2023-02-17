@@ -142,7 +142,7 @@ consoleintr(int c)
   switch(c){
   case C('C'):  // Print process list.
     //TODO: Callback to user mode signal handler code
-    printf("Ctrl+C\n$ ");
+    printf("Ctrl+C\n");
     kill_proc = 1;
     break;
   case C('P'):  // Print process list.
@@ -186,7 +186,7 @@ consoleintr(int c)
 
   if(kill_proc){
     printf("signalHandler\n");
-    //signalHandler(SIGINT);
+    // signalHandler(SIGINT);
   }
 }
 

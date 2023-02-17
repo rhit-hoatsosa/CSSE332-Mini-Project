@@ -5,8 +5,7 @@
 #include "spinlock.h"
 #include "proc.h"
 #include "defs.h"
-
-#define SIGINT  4
+#include "user/signal.h"
 
 struct cpu cpus[NCPU];
 void usertrap(void);
@@ -731,7 +730,7 @@ void restore(void) {
   // copy the current trapframe in the backup one
   // *(p->backup) = *(p->trapframe);
   *(p->trapframe) = *(p->backup);
-  exit(0);
+  // exit(0);
 }
 
 void signalHandler(struct proc *p){

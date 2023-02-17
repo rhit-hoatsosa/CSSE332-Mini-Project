@@ -112,10 +112,6 @@ sys_signal(void)
 uint64
 sys_restore(void)
 {
-  int s;
-  uint64 addr;
-  argint(0, &s);
-  argaddr(1, &addr);
-  signal(s, addr);
+  restore();
   return 0;
 }
