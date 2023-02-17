@@ -727,9 +727,11 @@ void restore(void) {
   struct proc* p = myproc();
   // TODO: we need to undo this....
   //create a new trapframe backup
-  p->backup = (struct trapframe*)kalloc();
+  // p->backup = (struct trapframe*)kalloc();
   // copy the current trapframe in the backup one
-  *(p->backup) = *(p->trapframe);
+  // *(p->backup) = *(p->trapframe);
+  *(p->trapframe) = *(p->backup);
+  exit(0);
 }
 
 void signalHandler(struct proc *p){

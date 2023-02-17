@@ -38,3 +38,4 @@ entry("sleep");
 entry("uptime");
 entry("sendSignal");
 entry("signal");
+entry("restore");
